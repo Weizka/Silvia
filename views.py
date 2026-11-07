@@ -1,0 +1,723 @@
+class GeneradorHTML:
+    """Clase que genera HTML dinámico con propuesta de salida interactiva."""
+
+    def __init__(self, mensaje):
+        self.mensaje = mensaje
+
+    def generar(self) -> str:
+        """Retorna HTML completo con todos los efectos románticos."""
+        return f"""
+        <!DOCTYPE html>
+        <html lang="es">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Para {self.mensaje.obtener_destinataria()}</title>
+            <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Playfair+Display:ital@1&display=swap" rel="stylesheet">
+            <style>
+                * {{
+                    margin: 0;
+                    padding: 0;
+                    box-sizing: border-box;
+                }}
+
+                body {{
+                    font-family: 'Playfair Display', serif;
+                    min-height: 100vh;
+                    overflow: hidden;
+                    position: relative;
+                }}
+
+                /* ===== PANTALLA DE BIENVENIDA ===== */
+                .pantalla-inicial {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 1000;
+                    transition: opacity 1.5s ease, transform 1.5s ease;
+                }}
+
+                .pantalla-inicial.oculta {{
+                    opacity: 0;
+                    transform: scale(1.1);
+                    pointer-events: none;
+                }}
+
+                .contenido-inicial {{
+                    text-align: center;
+                    padding: 40px;
+                    max-width: 600px;
+                    animation: aparecerSuave 1.5s ease;
+                }}
+
+                .emoji-inicial {{
+                    font-size: 4em;
+                    margin-bottom: 20px;
+                    animation: latido 1.5s infinite;
+                    display: inline-block;
+                }}
+
+                .mensaje-inicial {{
+                    font-size: 1.8em;
+                    color: #6b3410;
+                    line-height: 1.6;
+                    margin-bottom: 40px;
+                    font-style: italic;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                }}
+
+                .btn-continuar {{
+                    background: linear-gradient(135deg, #d63384, #ff6b9d);
+                    color: white;
+                    border: none;
+                    padding: 18px 45px;
+                    font-size: 1.3em;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    font-family: 'Dancing Script', cursive;
+                    box-shadow: 0 10px 30px rgba(214, 51, 132, 0.4);
+                    transition: all 0.3s ease;
+                    animation: parpadeo 2s infinite;
+                }}
+
+                .btn-continuar:hover {{
+                    transform: scale(1.1) rotate(2deg);
+                    box-shadow: 0 15px 40px rgba(214, 51, 132, 0.6);
+                }}
+
+                /* ===== PANTALLA PRINCIPAL ===== */
+                .pantalla-principal {{
+                    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                    min-height: 100vh;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    opacity: 0;
+                    transition: opacity 1.5s ease;
+                    position: relative;
+                }}
+
+                .pantalla-principal.visible {{
+                    opacity: 1;
+                }}
+
+                /* ===== ESTRELLAS DE FONDO ===== */
+                .estrella {{
+                    position: fixed;
+                    background: white;
+                    border-radius: 50%;
+                    animation: brillar 3s infinite;
+                    pointer-events: none;
+                }}
+
+                @keyframes brillar {{
+                    0%, 100% {{ opacity: 0.3; transform: scale(1); }}
+                    50% {{ opacity: 1; transform: scale(1.5); }}
+                }}
+
+                /* ===== TARJETA PRINCIPAL ===== */
+                .tarjeta {{
+                    background: rgba(255, 255, 255, 0.95);
+                    padding: 50px 70px;
+                    border-radius: 30px;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+                    text-align: center;
+                    max-width: 700px;
+                    position: relative;
+                    z-index: 10;
+                    cursor: pointer;
+                    transition: transform 0.3s ease;
+                }}
+
+                .tarjeta:hover {{
+                    transform: scale(1.02);
+                }}
+
+                h1 {{
+                    color: #d63384;
+                    margin-bottom: 25px;
+                    font-size: 2.8em;
+                    font-family: 'Dancing Script', cursive;
+                    animation: aparecer 1s ease;
+                    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+                }}
+
+                p.mensaje-principal {{
+                    font-size: 1.4em;
+                    color: #333;
+                    line-height: 1.8;
+                    margin-bottom: 30px;
+                    animation: aparecer 1.5s ease;
+                }}
+
+                .firma {{
+                    margin-top: 30px;
+                    font-style: italic;
+                    color: #888;
+                    font-size: 1.2em;
+                }}
+
+                .corazon-grande {{
+                    font-size: 4em;
+                    animation: latido 1.5s infinite;
+                    display: inline-block;
+                }}
+
+                /* ===== CARTA INTERACTIVA ===== */
+                .carta-container {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: rgba(0,0,0,0.7);
+                    z-index: 2000;
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                }}
+
+                .carta-container.visible {{
+                    display: flex;
+                }}
+
+                .carta {{
+                    width: 400px;
+                    background: linear-gradient(135deg, #fff5f5, #ffe0e0);
+                    border-radius: 20px;
+                    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+                    padding: 40px;
+                    text-align: center;
+                    animation: abrirCarta 0.8s ease;
+                }}
+
+                .carta-mensaje {{
+                    font-size: 1.4em;
+                    color: #d63384;
+                    font-family: 'Dancing Script', cursive;
+                    line-height: 1.6;
+                    margin-bottom: 25px;
+                }}
+
+                .btn-cerrar-carta {{
+                    background: #d63384;
+                    color: white;
+                    border: none;
+                    padding: 12px 30px;
+                    border-radius: 25px;
+                    cursor: pointer;
+                    font-size: 1.1em;
+                    font-family: 'Dancing Script', cursive;
+                    transition: all 0.3s ease;
+                }}
+
+                .btn-cerrar-carta:hover {{
+                    transform: scale(1.1);
+                    background: #b02a6c;
+                }}
+
+                @keyframes abrirCarta {{
+                    from {{
+                        transform: rotateY(-90deg) scale(0.5);
+                        opacity: 0;
+                    }}
+                    to {{
+                        transform: rotateY(0) scale(1);
+                        opacity: 1;
+                    }}
+                }}
+
+                /* ===== PROPUESTA DE SALIDA ===== */
+                .propuesta-container {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 50%, #fbc2eb 100%);
+                    z-index: 3000;
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }}
+
+                .propuesta-container.visible {{
+                    display: flex;
+                    animation: aparecerSuave 1s ease;
+                }}
+
+                .propuesta-titulo {{
+                    font-size: 3em;
+                    color: #d63384;
+                    font-family: 'Dancing Script', cursive;
+                    margin-bottom: 30px;
+                    text-align: center;
+                    text-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+                    animation: latido 2s infinite;
+                }}
+
+                .propuesta-pregunta {{
+                    font-size: 1.8em;
+                    color: #6b3410;
+                    margin-bottom: 50px;
+                    text-align: center;
+                    font-style: italic;
+                    max-width: 600px;
+                    line-height: 1.5;
+                }}
+
+                .botones-propuesta {{
+                    display: flex;
+                    gap: 40px;
+                    position: relative;
+                    min-height: 100px;
+                }}
+
+                .btn-si {{
+                    background: linear-gradient(135deg, #11998e, #38ef7d);
+                    color: white;
+                    border: none;
+                    padding: 25px 60px;
+                    font-size: 1.8em;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    font-family: 'Dancing Script', cursive;
+                    box-shadow: 0 10px 30px rgba(17, 153, 142, 0.5);
+                    transition: all 0.3s ease;
+                    animation: parpadeo 1.5s infinite;
+                }}
+
+                .btn-si:hover {{
+                    transform: scale(1.2);
+                    box-shadow: 0 15px 40px rgba(17, 153, 142, 0.7);
+                }}
+
+                .btn-no {{
+                    background: linear-gradient(135deg, #888, #aaa);
+                    color: white;
+                    border: none;
+                    padding: 20px 40px;
+                    font-size: 1.3em;
+                    border-radius: 50px;
+                    cursor: pointer;
+                    font-family: 'Dancing Script', cursive;
+                    transition: all 0.2s ease;
+                    position: relative;
+                }}
+
+                /* ===== PANTALLA FINAL (SÍ) ===== */
+                .pantalla-final {{
+                    position: fixed;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: linear-gradient(135deg, #ff6b9d 0%, #d63384 50%, #c71585 100%);
+                    z-index: 4000;
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    flex-direction: column;
+                }}
+
+                .pantalla-final.visible {{
+                    display: flex;
+                    animation: aparecerSuave 1s ease;
+                }}
+
+                .mensaje-final {{
+                    font-size: 3.5em;
+                    color: white;
+                    font-family: 'Dancing Script', cursive;
+                    text-align: center;
+                    text-shadow: 3px 3px 10px rgba(0,0,0,0.3);
+                    margin-bottom: 30px;
+                    animation: latido 1.5s infinite;
+                }}
+
+                .emoji-final {{
+                    font-size: 6em;
+                    animation: latido 1s infinite;
+                }}
+
+                /* ===== PÉTALOS DE ROSA ===== */
+                .petalo {{
+                    position: fixed;
+                    font-size: 1.5em;
+                    pointer-events: none;
+                    animation: caer 6s linear forwards;
+                    z-index: 5;
+                }}
+
+                @keyframes caer {{
+                    0% {{
+                        transform: translateY(-100px) rotate(0deg);
+                        opacity: 1;
+                    }}
+                    100% {{
+                        transform: translateY(100vh) rotate(360deg);
+                        opacity: 0;
+                    }}
+                }}
+
+                /* ===== MENSAJES FLOTANTES ===== */
+                .mensaje-flotante {{
+                    position: fixed;
+                    font-size: 1.5em;
+                    color: white;
+                    background: rgba(214, 51, 132, 0.9);
+                    padding: 15px 30px;
+                    border-radius: 50px;
+                    pointer-events: none;
+                    animation: flotar 3s ease-out forwards;
+                    z-index: 1000;
+                    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+                    font-family: 'Dancing Script', cursive;
+                }}
+
+                .corazon-flotante {{
+                    position: fixed;
+                    font-size: 2em;
+                    pointer-events: none;
+                    animation: subir 4s ease-out forwards;
+                    z-index: 5;
+                }}
+
+                /* ===== CONFETTI ===== */
+                .confetti {{
+                    position: fixed;
+                    width: 10px;
+                    height: 10px;
+                    pointer-events: none;
+                    animation: confetti-caer 3s ease-out forwards;
+                    z-index: 9999;
+                }}
+
+                @keyframes confetti-caer {{
+                    0% {{
+                        transform: translateY(0) rotate(0deg);
+                        opacity: 1;
+                    }}
+                    100% {{
+                        transform: translateY(100vh) rotate(720deg);
+                        opacity: 0;
+                    }}
+                }}
+
+                .instruccion {{
+                    position: fixed;
+                    bottom: 30px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    color: white;
+                    font-size: 1.2em;
+                    background: rgba(0,0,0,0.5);
+                    padding: 15px 30px;
+                    border-radius: 50px;
+                    animation: parpadeo 2s infinite;
+                    z-index: 100;
+                }}
+
+                /* ===== ANIMACIONES ===== */
+                @keyframes latido {{
+                    0%, 100% {{ transform: scale(1); }}
+                    50% {{ transform: scale(1.2); }}
+                }}
+
+                @keyframes aparecer {{
+                    from {{
+                        opacity: 0;
+                        transform: translateY(20px);
+                    }}
+                    to {{
+                        opacity: 1;
+                        transform: translateY(0);
+                    }}
+                }}
+
+                @keyframes aparecerSuave {{
+                    from {{
+                        opacity: 0;
+                        transform: translateY(-30px);
+                    }}
+                    to {{
+                        opacity: 1;
+                        transform: translateY(0);
+                    }}
+                }}
+
+                @keyframes flotar {{
+                    0% {{
+                        opacity: 1;
+                        transform: translateY(0) scale(1);
+                    }}
+                    100% {{
+                        opacity: 0;
+                        transform: translateY(-200px) scale(1.5);
+                    }}
+                }}
+
+                @keyframes subir {{
+                    0% {{
+                        opacity: 1;
+                        transform: translateY(0) rotate(0deg);
+                    }}
+                    100% {{
+                        opacity: 0;
+                        transform: translateY(-100vh) rotate(360deg);
+                    }}
+                }}
+
+                @keyframes parpadeo {{
+                    0%, 100% {{ opacity: 1; }}
+                    50% {{ opacity: 0.6; }}
+                }}
+
+                @keyframes temblar {{
+                    0%, 100% {{ transform: translate(0, 0); }}
+                    25% {{ transform: translate(-5px, 5px); }}
+                    50% {{ transform: translate(5px, -5px); }}
+                    75% {{ transform: translate(-5px, -5px); }}
+                }}
+            </style>
+        </head>
+        <body>
+            <!-- PANTALLA INICIAL -->
+            <div class="pantalla-inicial" id="pantallaInicial">
+                <div class="contenido-inicial">
+                    <div class="emoji-inicial">🥺💕</div>
+                    <p class="mensaje-inicial">
+                        Lo siento por ser tan inestable,<br>
+                        pero me encantas, niña hermosa.
+                    </p>
+                    <button class="btn-continuar" id="btnContinuar">
+                        Abrir mi corazón 💖
+                    </button>
+                </div>
+            </div>
+
+            <!-- PANTALLA PRINCIPAL -->
+            <div class="pantalla-principal" id="pantallaPrincipal">
+                <div class="tarjeta" id="tarjeta">
+                    <div class="corazon-grande">💖</div>
+                    <h1>Gracias {self.mensaje.obtener_destinataria()}</h1>
+                    <p class="mensaje-principal">{self.mensaje.obtener_mensaje_principal()}</p>
+                    <p class="firma">— {self.mensaje.autor}</p>
+                </div>
+
+                <div class="instruccion">✨ Haz clic en cualquier parte ✨</div>
+            </div>
+
+            <!-- CARTA SORPRESA -->
+            <div class="carta-container" id="cartaContainer">
+                <div class="carta">
+                    <p class="carta-mensaje">
+                        Eres la persona más especial que he conocido. 
+                        Cada momento contigo es un regalo. 💕<br><br>
+                        Te quiero mucho, Silvia. 🌹
+                    </p>
+                    <button class="btn-cerrar-carta" id="btnCerrarCarta">Sigue leyendo 💌</button>
+                </div>
+            </div>
+
+            <!-- PROPUESTA DE SALIDA -->
+            <div class="propuesta-container" id="propuestaContainer">
+                <div class="emoji-final" style="font-size: 5em;">💘</div>
+                <h2 class="propuesta-titulo">Tengo algo que preguntarte...</h2>
+                <p class="propuesta-pregunta">
+                    ¿Te gustaría salir conmigo este lunes? 🌹<br>
+                    <span style="font-size: 0.8em; color: #8b4513;">Prometo hacerte pasar un rato increíble 💕</span>
+                </p>
+                <div class="botones-propuesta">
+                    <button class="btn-si" id="btnSi">¡Sí! 💖</button>
+                    <button class="btn-no" id="btnNo">No 😢</button>
+                </div>
+            </div>
+
+            <!-- PANTALLA FINAL -->
+            <div class="pantalla-final" id="pantallaFinal">
+                <div class="emoji-final">💖🎉💖</div>
+                <h1 class="mensaje-final">¡Sabía que dirías que sí!</h1>
+                <p style="color: white; font-size: 1.5em; font-family: 'Dancing Script', cursive; margin-top: 20px;">
+                    Nos vemos el lunes, hermosa 🌹✨
+                </p>
+            </div>
+
+            <script>
+                const mensajes = {str(self.mensaje.mensajes_secundarios)};
+                const pantallaInicial = document.getElementById('pantallaInicial');
+                const pantallaPrincipal = document.getElementById('pantallaPrincipal');
+                const btnContinuar = document.getElementById('btnContinuar');
+                const cartaContainer = document.getElementById('cartaContainer');
+                const btnCerrarCarta = document.getElementById('btnCerrarCarta');
+                const propuestaContainer = document.getElementById('propuestaContainer');
+                const btnSi = document.getElementById('btnSi');
+                const btnNo = document.getElementById('btnNo');
+                const pantallaFinal = document.getElementById('pantallaFinal');
+                let contadorClics = 0;
+
+                // Crear estrellas de fondo
+                function crearEstrellas() {{
+                    for (let i = 0; i < 50; i++) {{
+                        const estrella = document.createElement('div');
+                        estrella.className = 'estrella';
+                        estrella.style.width = Math.random() * 3 + 'px';
+                        estrella.style.height = estrella.style.width;
+                        estrella.style.left = Math.random() * 100 + '%';
+                        estrella.style.top = Math.random() * 100 + '%';
+                        estrella.style.animationDelay = Math.random() * 3 + 's';
+                        document.body.appendChild(estrella);
+                    }}
+                }}
+
+                // Transición pantalla inicial → principal
+                btnContinuar.addEventListener('click', function() {{
+                    pantallaInicial.classList.add('oculta');
+                    setTimeout(() => {{
+                        pantallaPrincipal.classList.add('visible');
+                        crearEstrellas();
+                        iniciarEfectos();
+                    }}, 800);
+                }});
+
+                function iniciarEfectos() {{
+                    setInterval(crearPetalos, 800);
+                    setInterval(crearCorazonFondo, 2000);
+                }}
+
+                function crearPetalos() {{
+                    const petalo = document.createElement('div');
+                    petalo.className = 'petalo';
+                    petalo.innerHTML = ['🌹', '🌸', '💮', '🏵️'][Math.floor(Math.random() * 4)];
+                    petalo.style.left = Math.random() * 100 + '%';
+                    petalo.style.top = '-50px';
+                    petalo.style.animationDuration = (Math.random() * 3 + 4) + 's';
+                    document.body.appendChild(petalo);
+                    setTimeout(() => petalo.remove(), 7000);
+                }}
+
+                function crearCorazonFondo() {{
+                    const corazon = document.createElement('div');
+                    corazon.className = 'corazon-flotante';
+                    corazon.innerHTML = ['💖', '💕', '💝', '💗', '💓'][Math.floor(Math.random() * 5)];
+                    corazon.style.left = Math.random() * 100 + '%';
+                    corazon.style.bottom = '-50px';
+                    corazon.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                    document.body.appendChild(corazon);
+                    setTimeout(() => corazon.remove(), 7000);
+                }}
+
+                function crearConfetti(x, y, cantidad = 30) {{
+                    const colores = ['#ff6b9d', '#d63384', '#ffd700', '#ff1493', '#ff69b4', '#38ef7d'];
+                    for (let i = 0; i < cantidad; i++) {{
+                        const confetti = document.createElement('div');
+                        confetti.className = 'confetti';
+                        confetti.style.background = colores[Math.floor(Math.random() * colores.length)];
+                        confetti.style.left = x + 'px';
+                        confetti.style.top = y + 'px';
+                        confetti.style.transform = `translate(${{(Math.random() - 0.5) * 300}}px, 0)`;
+                        document.body.appendChild(confetti);
+                        setTimeout(() => confetti.remove(), 3000);
+                    }}
+                }}
+
+                // Mostrar carta después de 5 clics
+                function mostrarCarta() {{
+                    cartaContainer.classList.add('visible');
+                    crearConfetti(window.innerWidth / 2, window.innerHeight / 2, 50);
+                }}
+
+                // Al cerrar la carta → mostrar propuesta
+                btnCerrarCarta.addEventListener('click', function() {{
+                    cartaContainer.classList.remove('visible');
+                    setTimeout(() => {{
+                        propuestaContainer.classList.add('visible');
+                        crearConfetti(window.innerWidth / 2, window.innerHeight / 2, 40);
+                    }}, 500);
+                }});
+
+                // Botón "No" que huye del mouse 😂
+                btnNo.addEventListener('mouseover', function() {{
+                    const maxX = window.innerWidth - this.offsetWidth - 50;
+                    const maxY = window.innerHeight - this.offsetHeight - 50;
+                    const newX = Math.random() * maxX;
+                    const newY = Math.random() * maxY;
+                    this.style.position = 'fixed';
+                    this.style.left = newX + 'px';
+                    this.style.top = newY + 'px';
+                    this.style.transition = 'all 0.3s ease';
+                }});
+
+                // Si logra hacer clic en "No" (casi imposible), igual muestra el Sí
+                btnNo.addEventListener('click', function() {{
+                    alert('Jaja, ese botón no funciona 😉');
+                }});
+
+                // Botón "Sí" → pantalla final con confetti masivo
+                btnSi.addEventListener('click', function() {{
+                    propuestaContainer.classList.remove('visible');
+                    setTimeout(() => {{
+                        pantallaFinal.classList.add('visible');
+                        // Confetti masivo desde varios puntos
+                        for (let i = 0; i < 10; i++) {{
+                            setTimeout(() => {{
+                                crearConfetti(
+                                    Math.random() * window.innerWidth,
+                                    Math.random() * window.innerHeight / 2,
+                                    40
+                                );
+                            }}, i * 200);
+                        }}
+                        // Lluvia de corazones
+                        for (let i = 0; i < 30; i++) {{
+                            setTimeout(() => crearCorazonFondo(), i * 100);
+                        }}
+                    }}, 500);
+                }});
+
+                // Clics en pantalla principal
+                document.addEventListener('click', function(e) {{
+                    if (e.target === btnContinuar || e.target === btnCerrarCarta || 
+                        e.target === btnSi || e.target === btnNo) return;
+                    if (!pantallaPrincipal.classList.contains('visible')) return;
+
+                    contadorClics++;
+
+                    if (contadorClics === 5) {{
+                        mostrarCarta();
+                    }}
+
+                    const mensaje = document.createElement('div');
+                    mensaje.className = 'mensaje-flotante';
+                    mensaje.textContent = mensajes[Math.floor(Math.random() * mensajes.length)];
+                    mensaje.style.left = e.clientX + 'px';
+                    mensaje.style.top = e.clientY + 'px';
+                    document.body.appendChild(mensaje);
+
+                    for (let i = 0; i < 5; i++) {{
+                        setTimeout(() => {{
+                            const corazon = document.createElement('div');
+                            corazon.className = 'corazon-flotante';
+                            corazon.innerHTML = ['💖', '💕', '💝', '💗', '💓'][Math.floor(Math.random() * 5)];
+                            corazon.style.left = (e.clientX + (Math.random() - 0.5) * 100) + 'px';
+                            corazon.style.top = e.clientY + 'px';
+                            corazon.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                            document.body.appendChild(corazon);
+                            setTimeout(() => corazon.remove(), 4000);
+                        }}, i * 100);
+                    }}
+
+                    crearConfetti(e.clientX, e.clientY, 15);
+                    setTimeout(() => mensaje.remove(), 3000);
+                }});
+            </script>
+        </body>
+        </html>
+        """
